@@ -7,15 +7,15 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class CoinMarketCapTest:
     """
-    Class to test the CoinMarketCap webpage functionality using Selenium WebDriver.
+    Klasa za testiranje funkcionalnosti CoinMarketCap veb stranice koristeći Selenium WebDriver.
     """
 
     def __init__(self, driver_path, chrome_path):
         """
-        Initializes the WebDriver.
+        Inicijalizuje WebDriver.
         
-        :param driver_path: Path to the WebDriver executable.
-        :param chrome_path: Path to the Chrome executable.
+        :param driver_path: Putanja do WebDriver izvršnog fajla.
+        :param chrome_path: Putanja do Chrome izvršnog fajla.
         """
         chrome_options = Options()
         chrome_options.binary_location = chrome_path
@@ -26,65 +26,63 @@ class CoinMarketCapTest:
         self.service = Service(driver_path)
         self.driver = webdriver.Chrome(service=self.service, options=chrome_options)
         self.driver.maximize_window()
-        print("WebDriver initialized successfully.")
+        print("WebDriver uspešno inicijalizovan.")
 
     def open_coinmarketcap(self):
         """
-        Opens the CoinMarketCap website.
+        Otvara CoinMarketCap veb stranicu.
         """
         try:
-            print("Opening CoinMarketCap website.")
+            print("Otvaranje CoinMarketCap veb stranice.")
             self.driver.get("https://coinmarketcap.com")
-            print("Website opened successfully.")
+            print("Web stranica uspešno otvorena.")
         except Exception as e:
-            print(f"An error occurred while opening the website: {e}")
+            print(f"Došlo je do greške prilikom otvaranja veb stranice: {e}")
 
     def click_all(self):
         """
-        Clicks the 'All' button to display all results.
+        Kliknuti 'All' dugme za prikaz svih rezultata.
         """
         try:
-            print("Attempting to click 'All' button.")
+            print("Pokusavam da kliknem dugme All")
             buttons = self.driver.find_elements(By.TAG_NAME, "button")
             all_button = next(button for button in buttons if button.text.strip() == 'All')
             self.driver.execute_script("arguments[0].click();", all_button)
-            print("'All' button clicked successfully using JavaScript.")
+            print("Dugme All je uspesno kliknuto.")
         except Exception as e:
-            print(f"An error occurred while clicking 'All': {e}")
+            print(f"Greska prilikom klikanja na dugme All: {e}")
             self.driver.quit()
 
     def verify_all_results_displayed(self):
         """
-        Verifies that all results are displayed after clicking 'All'.
-        
-        :return: True if all results are displayed, otherwise False.
+        Verifikacija da su svi rezultati prikazani posle pritiska na dugme 'All'.
         """
         try:
-            print("Verifying that all results are displayed.")
+            print(" Verifikacija da su svi rezultati prikazani.")
             results = WebDriverWait(self.driver, 30).until(
                 EC.presence_of_all_elements_located((By.CLASS_NAME, "cmc-table-row"))
             )
-            print(f"Number of results found: {len(results)}")
+            print(f"Broj pronadjenih rezultata: {len(results)}")
             return len(results) > 0
         except Exception as e:
-            print(f"An error occurred while verifying results: {e}")
+            print(f"Greska prilikom verifikacije: {e}")
             with open("page_source.html", "w", encoding="utf-8") as f:
                 f.write(self.driver.page_source)
             return False
 
     def run_test(self):
         """
-        Runs the test to open the webpage, click 'All', and verify the results.
+        Pokrecemo test koji otvara web stranicu klikne dugme All i verifikuje rezultate.
         """
-        print("Starting test.")
+        print("Pocetak testa.")
         self.open_coinmarketcap()
         self.click_all()
         if self.verify_all_results_displayed():
-            print("Test passed: All results are displayed.")
+            print("Test je prosao: Svi rezultati su prikazani.")
         else:
-            print("Test failed: Results are not displayed.")
+            print("Test je pao: Nema prikazanih rezultata.")
         self.driver.quit()
-        print("Test completed.")
+        print("Test je zavrsen.")
 
 if __name__ == "__main__":
     driver_path = "C:\\Users\\Administrator\\Downloads\\chromedriver-win64\\chromedriver.exe"
