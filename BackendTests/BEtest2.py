@@ -14,7 +14,7 @@ def get_ethereum_info():
     params = {
         'id': '1027'
     }
-    response = requests.get(INFO_URL, headers=headers, params=params)
+    response = requests.get(INFO_URL, headers=headers, params=params) #Šalje get zahtev CoinMarketCap API-ju sa definisanim zaglavljima i parametrima.
     data = response.json()
     return data['data']['1027']
 
