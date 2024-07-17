@@ -44,13 +44,15 @@ class CoinMarketCapTest:
         Kliknuti 'All' dugme za prikaz svih rezultata.
         """
         try:
-            print("Pokusavam da kliknem dugme All")
-            buttons = self.driver.find_elements(By.TAG_NAME, "button")
-            all_button = next(button for button in buttons if button.text.strip() == 'All')
+            print("Pokušavam da kliknem dugme All")
+            all_button_selector = "#__next > div.sc-2e66506f-1.buMEwe.global-layout-v2 > div.main-content > div.cmc-body-wrapper > div > div:nth-child(1) > div.sc-d577b7d4-4.dZhWhQ > div.sc-4c05d6ef-0.sc-c652d51c-1.sc-6fa8c3d4-0.dlQYLv.jOvctx.eDTcwB.table-control-outer-wrapper.scroll-indicator.scroll-initial.hideArrow > div.scroll-child > div.sc-4c05d6ef-0.FfYmA.table-link-area > a:nth-child(1) > button"
+            all_button = WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, all_button_selector))
+            )
             self.driver.execute_script("arguments[0].click();", all_button)
-            print("Dugme All je uspesno kliknuto.")
+            print("Dugme All je uspešno kliknuto.")
         except Exception as e:
-            print(f"Greska prilikom klikanja na dugme All: {e}")
+            print(f"Greška prilikom klikanja na dugme All: {e}")
             self.driver.quit()
 
     def verify_all_results_displayed(self):
@@ -58,12 +60,14 @@ class CoinMarketCapTest:
         Verifikacija da su svi rezultati prikazani posle pritiska na dugme 'All'.
         """
         try:
-            print(" Verifikacija da su svi rezultati prikazani.")
-            results = WebDriverWait(self.driver, 30).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, "cmc-table-row"))
+            print("Verifikacija da su svi rezultati prikazani.")
+            table_selector = "#__next > div.sc-2e66506f-1.buMEwe.global-layout-v2 > div.main-content > div.cmc-body-wrapper > div > div:nth-child(1) > div.sc-963bde9f-2.bZVSBs > table"
+            table = WebDriverWait(self.driver, 20).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, table_selector))
             )
-            print(f"Broj pronadjenih rezultata: {len(results)}")
-            return len(results) > 0
+            rows = table.find_elements(By.TAG_NAME, "tr")
+            print(f"Broj pronađenih rezultata: {len(rows)}")
+            return len(rows) > 0
         except Exception as e:
             print(f"Greska prilikom verifikacije: {e}")
             with open("page_source.html", "w", encoding="utf-8") as f:
@@ -72,17 +76,17 @@ class CoinMarketCapTest:
 
     def run_test(self):
         """
-        Pokrecemo test koji otvara web stranicu klikne dugme All i verifikuje rezultate.
+        Pokrećemo test koji otvara web stranicu, klikne dugme All i verifikuje rezultate.
         """
-        print("Pocetak testa.")
+        print("Početak testa.")
         self.open_coinmarketcap()
         self.click_all()
         if self.verify_all_results_displayed():
-            print("Test je prosao: Svi rezultati su prikazani.")
+            print("Test je prošao: Svi rezultati su prikazani.")
         else:
             print("Test je pao: Nema prikazanih rezultata.")
         self.driver.quit()
-        print("Test je zavrsen.")
+        print("Test je završen.")
 
 if __name__ == "__main__":
     driver_path = "C:\\Users\\Administrator\\Downloads\\chromedriver-win64\\chromedriver.exe"
