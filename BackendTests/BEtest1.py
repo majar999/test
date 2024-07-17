@@ -1,14 +1,14 @@
 
-import requests
+import requests #omogućava da šaljemo HTTP zahteve putem Python-a
 
 # Definišite svoj API ključ
 API_KEY = 'f440560e-66ae-4b58-a886-11bef057b80f'
 
 # Endpoint URL-ovi
-MAP_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map'
+MAP_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/map' #definisanje URL-ova za dobijanje ID kriptovaluta i konverziju
 PRICE_CONVERSION_URL = 'https://pro-api.coinmarketcap.com/v1/tools/price-conversion'
 
-# Funkcija za dobavljanje ID-ova kriptovaluta
+# Funkcija za dobavljanje ID-ova kriptovaluta,headers=recnik-kljuc
 def get_currency_ids():
     headers = {
         'X-CMC_PRO_API_KEY': API_KEY,
